@@ -16,18 +16,7 @@ body {
 }
 
 /* Main Container */
-.container {
-  text-align: center;
-  width: 100%;
-  max-width: 400px;
-  padding: 25px;
-  background-color: #c01212;
-  border: 1px solid #333;
-  border-radius: 12px;
-  position: relative;
-  overflow: hidden;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
-}
+
 
 /* Logo in Top-Left Corner */
 .logo_container {
@@ -47,7 +36,7 @@ body {
   color: #d4d4d4;
   font-weight: 600;
   margin-bottom: 5px;
-  margin-top: 10vh;
+  margin-top: 8vh;
   text-shadow: 0 0 2px #00a3cc;
   letter-spacing: 0.5px;
   margin-left: 3.5vw;
@@ -160,7 +149,7 @@ input[type="text"]:focus {
 
 /* Join Button */
 .join_container {
-  background-color: #0d0d0d;
+  background-color: #000000;
   color: #ffffff;
   font-size: 1rem;
   font-weight: bold;
