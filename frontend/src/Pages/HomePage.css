@@ -20,7 +20,7 @@ body {
 
 /* Logo in Top-Left Corner */
 .logo_container {
-  font-size: 1.8rem;
+  font-size: 150%;
   font-weight: bold;
   color: #00d4ff; /* Cyan for a sci-fi vibe */
   position: absolute;
@@ -32,7 +32,7 @@ body {
 
 /* Introductory Text */
 .intro_container {
-  font-size: 2.5rem;
+  font-size: 220%;
   color: #d4d4d4;
   font-weight: 600;
   margin-bottom: 5px;
