@@ -1,0 +1,170 @@
+/* Basic Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Roboto", sans-serif;
+  background-color: #0d0d0d; /* Darker sci-fi background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  color: #d4d4d4; /* Soft light text color */
+}
+
+/* Main Container */
+
+
+/* Logo in Top-Left Corner */
+.logo_container {
+  font-size: 150%;
+  font-weight: bold;
+  color: #00d4ff; /* Cyan for a sci-fi vibe */
+  position: absolute;
+  top: 2vh;
+  left: 2vw;
+  text-shadow: 0 0 3px #00d4ff, 0 0 2px #00a3cc;
+  letter-spacing: 1px;
+}
+
+/* Introductory Text */
+.intro_container {
+  font-size: 220%;
+  color: #d4d4d4;
+  font-weight: 600;
+  margin-bottom: 5px;
+  margin-top: 8vh;
+  text-shadow: 0 0 2px #00a3cc;
+  letter-spacing: 0.5px;
+  margin-left: 3.5vw;
+  padding-right: 50vw;
+}
+
+.sub_intro_container {
+  font-size: 1.2rem;
+  color: #a6a6a6;
+  margin-bottom: 25px;
+  line-height: 1.5;
+  letter-spacing: 0.3px;
+  margin-left: 3.5vw;
+  padding-right: 50vw;
+}
+
+.buttons_container{
+    display: flex;
+    flex-direction: row;
+}
+
+button {
+  outline: none;
+}
+
+button:focus {
+  outline: none;
+}
+
+.dropdown {
+  position: relative;
+}
+
+.dropdown_menu {
+  position: absolute;
+  background-color: #1a1a1a;
+  border-radius: 6px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  width: 18vw;
+  padding: 5px 0;
+  z-index: 10;
+  margin-left: 3.5vw;
+  border-radius: 0%;
+}
+
+.dropdown_item {
+  background-color: transparent;
+  color: #d4d4d4;
+  border: none;
+  width: 100%;
+  height: 8vh;
+  padding: 10px;
+  text-align: left;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+  border-bottom: rgb(255, 255, 255);
+  border-radius: 0%;
+}
+
+.dropdown_item:hover {
+  background-color: #333;
+  color: #ffffff;
+}
+
+/* Create Meeting Button */
+.create_meet_container {
+  background-color: #00d4ff;
+  color: #0d0d0d;
+  font-size: 1rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.4s ease, box-shadow 0.4s ease;
+  width: 12vw;
+  height: 3.5vw;
+  box-shadow: 0 0 6px rgba(0, 212, 255, 0.4);
+  margin-left: 3.5vw;
+  margin-bottom: 0.3vh;
+  outline: none;
+}
+
+.create_meet_container:hover {
+  background-color: #0a96ce;
+  color: rgb(0, 0, 0);
+  box-shadow: 0 0 3px rgba(0, 212, 255, 0.5);
+  outline: none;
+}
+
+/* Input Field with Futuristic Borders */
+input[type="text"] {
+  width: 15vw;
+  padding: 12px;
+  font-size: 1rem;
+  color: #d4d4d4;
+  background-color: #333;
+  border: 1px solid #444;
+  border-radius: 6px;
+  outline: none;
+  transition: border-color 0.3s ease;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+  margin-left: 1vw;
+}
+
+input[type="text"]:focus {
+  border-color: #00d4ff;
+  box-shadow: 0 0 1.5px rgba(0, 212, 255, 0.4);
+}
+
+/* Join Button */
+.join_container {
+  background-color: #000000;
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: bold;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  width: 5vw;
+  outline: none;
+}
+
+.join_container:hover {
+  color: #00d4ff;
+  text-shadow: 0 0 10px rgba(0, 84, 128, 0.5);
+  transition: color 0.4s ease, text-shadow 0.4s ease;
+  outline: none;
+}
