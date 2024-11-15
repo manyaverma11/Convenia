@@ -12,6 +12,35 @@ const peerServer = ExpressPeerServer(server, {
 });
 const path = require("path");
 
+
+import connectDB from './db.js';
+import { createUser, findUserByEmail } from './controllers/userController.js';
+import { createMeeting, getMeetingById } from './controllers/meetingController.js';
+import { createTranscript } from './controllers/transcriptController.js';
+import { createSummary } from './controllers/summaryController.js';
+import ApiError from './utils/apiError.js';
+import asyncHandler from './utils/asyncHandler.js';
+
+// Connect to MongoDB
+connectDB();
+
+// API Routes
+app.post('/create-user', asyncHandler(createUser));
+app.get('/find-user/:email', asyncHandler(findUserByEmail));
+app.post('/create-meeting', asyncHandler(createMeeting));
+app.get('/get-meeting/:id', asyncHandler(getMeetingById));
+app.post('/create-transcript', asyncHandler(createTranscript));
+app.post('/create-summary', asyncHandler(createSummary));
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  if (err instanceof ApiError) {
+    return apiResponse(res, err.statusCode, false, err.message);
+  }
+  apiResponse(res, 500, false, 'Internal Server Error');
+});
+
+
 app.set("view engine", "ejs");
 app.use("/public", express.static(path.join(__dirname, "static")));
 app.use("/peerjs", peerServer);

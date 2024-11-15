@@ -8,6 +8,7 @@
     "dev": "nodemon server.js",
     "start-peer": "peerjs --port 8001"
   },
+  "type": "module",
   "keywords": [],
   "author": "",
   "license": "ISC",
