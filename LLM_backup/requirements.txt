@@ -1,15 +1,14 @@
 langchain
 openai
 pydantic
-whisper
 fastapi
 pydantic    
 torch
 openai
 moviepy
 transformers
-langchain
 langchain_community
 fpdf
 numpy
 uvicorn
+accelerate
