@@ -1,0 +1,13 @@
+fastapi 
+pydantic    
+torch
+os
+openai
+moviepy
+transformers
+langchain
+langchain
+langchain_community
+fpdf
+numpy
+uvicorn
