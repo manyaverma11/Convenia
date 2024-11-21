@@ -92,7 +92,6 @@ async def transcribe_video(video: UploadFile = File(...)):
     
     audio_data = convert_video_to_audio(video_data)
     
-
     result = pipe(audio_data, generate_kwargs={'language':'en'},return_timestamps=True)
     transcription_text = result["text"]
     timestamps = result['chunks']

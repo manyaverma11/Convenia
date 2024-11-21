@@ -21,79 +21,178 @@
         height: 100vh;
         display: flex;
         flex-direction: column;
-        justify-content: center;
-        align-items: center;
       }
-      .meet-container {
+
+      .header {
+        background-color: #202020;
+        padding: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
+        width: 100%;
+      }
+
+      .header h1 {
+        color: #00d8ff;
+        margin: 0;
+      }
+
+      .user-details {
+        color: #fff;
+      }
+
+      .container {
+        display: flex;
+        flex-grow: 1;
+        height: calc(100vh - 60px);
+        padding: 20px;
+        justify-content: space-between;
+      }
+
+      .side-panel {
+        width: 300px;
         background-color: #202020;
         padding: 30px;
         border-radius: 8px;
-        width: 400px;
         box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
-        text-align: center;
+        position: sticky;
+        top: 0;
+        height: 100%;
+        flex-shrink: 0;
+        max-height: 100vh;
       }
-      .meet-container h6 {
+
+      .past-meetings-container {
+        background-color: #202020;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+        width: calc(100% - 320px);
+        max-height: 100vh;
+        overflow-y: auto;
+      }
+
+      .side-panel h6,
+      .past-meetings-container h6 {
         color: #00d8ff;
         margin-bottom: 20px;
       }
+
       .form-control {
         background-color: #333;
         color: #fff;
         border: 1px solid #444;
         margin-bottom: 15px;
       }
+
       .form-control:focus {
         background-color: #333;
         color: #fff;
         border-color: #00d8ff;
         box-shadow: none;
       }
+
       .btn-primary {
         background-color: #00d8ff;
         border: none;
         width: 100%;
         margin-bottom: 15px;
       }
+
       .btn-primary:hover {
         background-color: #00b8e6;
       }
+
       .btn-secondary {
         background-color: #444;
         border: none;
         width: 100%;
         color: #fff;
       }
+
       .btn-secondary:hover {
         background-color: #555;
       }
-      a {
+
+      .meeting-item {
+        background-color: #333;
+        padding: 15px;
+        margin-bottom: 10px;
+        border-radius: 8px;
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .meeting-item a {
+        color: #00d8ff;
         text-decoration: none;
-        display: block;
+      }
+
+      .meeting-item a:hover {
+        text-decoration: underline;
       }
     </style>
   </head>
   <body>
-    <div class="meet-container">
-      <h6>Create a New Meeting</h6>
-      <a href="/newmeet">
-        <button class="btn btn-primary mb-3">Create New Room</button>
-      </a>
-      <form action="/joinUser" method="post">
-        <h6>Join a Meeting</h6>
-        <div class="form-group">
-          <input
-            type="text"
-            class="form-control"
-            name="roomid"
-            required
-            placeholder="Enter Room ID"
-          />
+    <!-- Header -->
+    <div class="header">
+      <h1>Conveia</h1>
+      <div class="user-details">User: John Doe</div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+      <!-- Side Panel (Join Meeting) -->
+      <div class="side-panel">
+        <h6>Create a New Meeting</h6>
+        <a href="/newmeet">
+          <button class="btn btn-primary mb-3">Create New Room</button>
+        </a>
+        <form action="/joinUser" method="post">
+          <h6>Join a Meeting</h6>
+          <div class="form-group">
+            <input
+              type="text"
+              class="form-control"
+              name="roomid"
+              required
+              placeholder="Enter Room ID"
+            />
+          </div>
+          <button type="submit" class="btn btn-primary">Join Room</button>
+        </form>
+        <a href="/logout">
+          <button class="btn btn-secondary mt-3">Logout</button>
+        </a>
+      </div>
+
+      <!-- Right Panel (Past Meetings) -->
+      <div class="past-meetings-container">
+        <h6>Past Meetings</h6>
+        <!-- Meeting Item Example -->
+        <div class="meeting-item">
+          <div>
+            <div><strong>Meeting Title</strong></div>
+            <div>Meeting Date & Time</div>
+          </div>
+          <div>
+            <a href="#">Download Summary</a> |
+            <a href="#">Download Content</a>
+          </div>
         </div>
-        <button type="submit" class="btn btn-primary">Join Room</button>
-      </form>
-      <a href="/logout">
-        <button class="btn btn-secondary mt-3">Logout</button>
-      </a>
+        <div class="meeting-item">
+          <div>
+            <div><strong>Meeting Title</strong></div>
+            <div>Meeting Date & Time</div>
+          </div>
+          <div>
+            <a href="#">Download Summary</a> |
+            <a href="#">Download Content</a>
+          </div>
+        </div>
+        <!-- Add more meeting items here as necessary -->
+      </div>
     </div>
   </body>
 </html>
