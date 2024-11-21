@@ -1,7 +1,10 @@
-var mongoose=require("mongoose");
+var mongoose = require("mongoose");
 
-mongoose.connect("mongodb://localhost:27017/videochat").then(()=>{
+mongoose
+  .connect(process.env.MONGODB_URI)
+  .then(() => {
     console.log("Database Connected Successfully");
-}).catch((err)=>{
+  })
+  .catch((err) => {
     console.log("No Connection to Database");
-})
+  });
