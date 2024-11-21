@@ -5,7 +5,7 @@ import torch
 import os
 import openai
 from moviepy.editor import VideoFileClip, AudioFileClip
-from transformers import AutoModelForSpeechSeq2Seq, AutoProcessor, pipeline, AutoModelForCausalLM, AutoTokenizer
+from transformers import AutoModelForSpeechSeq2Seq, AutoProcessor, pipeline
 from constants import hf_key, cohere_key
 from langchain.chains import LLMChain
 from langchain.prompts import PromptTemplate
