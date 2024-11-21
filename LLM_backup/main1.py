@@ -6,7 +6,7 @@ import os
 import openai
 from moviepy.editor import VideoFileClip, AudioFileClip
 from transformers import AutoModelForSpeechSeq2Seq, AutoProcessor, pipeline, AutoModelForCausalLM, AutoTokenizer
-from constants import hf_key, anthropic_key, cohere_key
+from constants import hf_key, cohere_key
 from langchain.chains import LLMChain
 from langchain.prompts import PromptTemplate
 from langchain_community.llms import HuggingFaceHub, HuggingFacePipeline, Cohere
