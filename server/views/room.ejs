@@ -11,172 +11,163 @@
     </script>
     <script src="https://unpkg.com/peerjs@1.2.0/dist/peerjs.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
+    <script src="script.js"></script>
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
       integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
       crossorigin="anonymous"
     />
-    <style>
-      body {
-        background-color: #181818;
-        color: #fff;
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-        height: 100vh;
-        display: flex;
-        flex-direction: column;
-      }
-      .header {
-        text-align: center;
-        background-color: #202020;
-        padding: 15px 0;
-        font-size: 20px;
-        color: #00d8ff;
-        font-weight: bold;
-      }
-      .room-id {
-        font-size: 14px;
-        margin-top: 5px;
-        color: #ddd;
-      }
-      .main-container {
-        display: flex;
-        flex-grow: 1;
-        overflow: hidden;
-      }
-      .video-section {
-        flex: 3;
-        display: flex;
-        flex-direction: column;
-        padding: 20px;
-        gap: 10px;
-        overflow-y: auto;
-      }
-      .video-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-        grid-gap: 15px;
-        justify-items: center;
-        align-items: center;
-      }
-      video {
-        background-color: #333;
-        border-radius: 8px;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-      }
-      .controls {
-        display: flex;
-        justify-content: center;
-        gap: 15px;
-        padding: 10px;
-        background-color: #202020;
-        border-radius: 8px;
-      }
-      .controls button {
-        background-color: #333;
-        color: #fff;
-        border: 1px solid #444;
-        padding: 10px 15px;
-        border-radius: 8px;
-        cursor: pointer;
-        font-size: 14px;
-      }
-      .controls button:hover {
-        background-color: #444;
-      }
-      .chat-section {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        padding: 20px;
-        background-color: #202020;
-        border-left: 1px solid #444;
-      }
-      .chat-header {
-        font-size: 18px;
-        font-weight: bold;
-        margin-bottom: 15px;
-        color: #00d8ff;
-      }
-      .chat-box {
-        flex-grow: 1;
-        overflow-y: auto;
-        background-color: #181818;
-        padding: 10px;
-        border-radius: 8px;
-        border: 1px solid #333;
-        color: #ddd;
-      }
-      .chat-box ul {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-      }
-      .chat-input {
-        display: flex;
-        margin-top: 15px;
-        gap: 10px;
-      }
-      .chat-input input {
-        flex: 1;
-        padding: 10px;
-        border-radius: 4px;
-        border: 1px solid #444;
-        background-color: #333;
-        color: #fff;
-      }
-      .chat-input button {
-        background-color: #00d8ff;
-        color: #000;
-        border: none;
-        border-radius: 4px;
-        padding: 10px 15px;
-        font-weight: bold;
-      }
-      .chat-input button:hover {
-        background-color: #00b8e6;
-      }
-    </style>
   </head>
+  <style>
+    body {
+      background-color: #181818;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    .header {
+      background-color: #202020;
+      padding: 15px;
+      text-align: center;
+      color: #00d8ff;
+      font-size: 24px;
+      font-weight: bold;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    }
+
+    .main-content {
+      display: flex;
+      flex-grow: 1;
+      overflow: hidden;
+    }
+
+    #video-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      grid-gap: 20px;
+      flex: 2;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    video {
+      width: 100%;
+      border-radius: 8px;
+      background-color: #333;
+      object-fit: cover;
+      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+    }
+
+    .chat-section {
+      background-color: #202020;
+      padding: 20px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      border-left: 2px solid #444;
+    }
+
+    .chat-box {
+      flex-grow: 1;
+      background-color: #181818;
+      padding: 15px;
+      border-radius: 8px;
+      color: #ddd;
+      overflow-y: auto;
+      margin-bottom: 15px;
+      border: 1px solid #333;
+    }
+
+    .chat-box ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    .chat-input {
+      display: flex;
+      align-items: center;
+    }
+
+    .chat-input input {
+      flex: 1;
+      padding: 10px;
+      background-color: #333;
+      color: #fff;
+      border: 1px solid #444;
+      border-radius: 4px;
+    }
+
+    .chat-input button {
+      background-color: #00d8ff;
+      color: #000;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .chat-input button:hover {
+      background-color: #00b8e6;
+    }
+
+    .footer {
+      background-color: #202020;
+      padding: 10px;
+      text-align: center;
+      color: #ddd;
+      box-shadow: 0px -4px 6px rgba(0, 0, 0, 0.3);
+      display: flex;
+      justify-content: center;
+    }
+
+    .footer button {
+      margin: 5px;
+    }
+  </style>
+
   <body>
     <div class="header">
       Convenia Meeting Room
-      <div class="room-id">Room ID: <strong><%= roomId %></strong></div>
+      <div>Room ID: <strong><%= roomId %></strong></div>
     </div>
-    <div class="main-container">
-      <!-- Video Section -->
-      <div class="video-section">
-        <div class="video-grid" id="video-grid"></div>
-        <div class="controls">
-          <button id="audio" onclick="muteAudiio()">Mute Audio</button>
-          <button id="video" onclick="muteVideo()">Mute Video</button>
-          <button onclick="leaveMeet()">Leave Meeting</button>
-          <form action="/logout" method="get" style="display: inline">
-            <button>Logout</button>
-          </form>
-        </div>
-      </div>
-      <!-- Chat Section -->
+
+    <div class="main-content">
+      <div id="video-grid"></div>
+
       <div class="chat-section">
-        <div class="chat-header">Chat-Box</div>
+        <h3>Chat Box</h3>
         <div class="chat-box">
           <ul id="msg"></ul>
         </div>
         <div class="chat-input">
-          <input
-            type="text"
-            name="message"
-            id="message"
-            placeholder="Type a message..."
-          />
+          <input type="text" name="message" id="message" />
           <button onclick="sendMessage()">Send</button>
         </div>
       </div>
     </div>
+
+    <div class="footer">
+      <button id="audio" onclick="muteAudiio()" class="btn btn-primary">
+        Mute Audio
+      </button>
+      <button id="video" onclick="muteVideo()" class="btn btn-primary">
+        Mute Video
+      </button>
+      <button onclick="leaveMeet()" class="btn btn-danger">
+        Leave Meeting
+      </button>
+      <form action="/logout" method="get" style="display: inline">
+        <button onclick="logout()" class="btn btn-danger">Logout</button>
+      </form>
+    </div>
+
     <script>
       const socket = io("/");
       const videoGrid = document.getElementById("video-grid");
@@ -184,13 +175,15 @@
       const myVideo = document.createElement("video");
       myVideo.muted = true;
       const peers = {};
-      let localStream;
+      let localstream;
 
-      // Get user media (camera and microphone)
       navigator.mediaDevices
-        .getUserMedia({ video: true, audio: true })
+        .getUserMedia({
+          video: true,
+          audio: true,
+        })
         .then((stream) => {
-          localStream = stream;
+          localstream = stream;
           addVideoStream(myVideo, stream);
 
           myPeer.on("call", (call) => {
@@ -204,22 +197,39 @@
           socket.on("user-connected", (userId) => {
             connectToNewUser(userId, stream);
           });
+
+          socket.on("show-to-room", (message, username) => {
+            items.push({ username: username, message: message });
+            let listItems = "";
+            for (let i = 0; i < items.length; i++) {
+              listItems +=
+                "<li>" +
+                "<span>" +
+                items[i].username +
+                "</span>" +
+                ": " +
+                items[i].message +
+                "</li>";
+            }
+            document.getElementById("msg").innerHTML = listItems;
+            document.getElementById("message").value = "";
+          });
         });
 
       socket.on("user-disconnected", (userId) => {
-        if (peers[userId]) peers[userId].close();
+        if (peers[userId]) {
+          peers[userId].close();
+        }
       });
 
       myPeer.on("open", (id) => {
         socket.emit("join-room", ROOM_ID, id);
       });
 
-      function addVideoStream(video, stream) {
-        video.srcObject = stream;
-        video.addEventListener("loadedmetadata", () => {
-          video.play();
-        });
-        videoGrid.appendChild(video);
+      let items = [];
+      function sendMessage() {
+        var msgContent = document.getElementById("message").value;
+        socket.emit("send-chat", msgContent, username);
       }
 
       function connectToNewUser(userId, stream) {
@@ -235,43 +245,41 @@
         peers[userId] = call;
       }
 
-      function muteAudiio() {
-        const audioEnabled = localStream.getAudioTracks()[0].enabled;
-        localStream.getAudioTracks()[0].enabled = !audioEnabled;
-        document.getElementById("audio").textContent = audioEnabled
-          ? "Unmute Audio"
-          : "Mute Audio";
+      function addVideoStream(video, stream) {
+        video.srcObject = stream;
+        video.addEventListener("loadedmetadata", () => {
+          video.play();
+        });
+        videoGrid.append(video);
       }
 
+      let isAudio = true;
+      function muteAudiio() {
+        isAudio = !isAudio;
+        localstream.getAudioTracks()[0].enabled = isAudio;
+        if (!isAudio) {
+          document.getElementById("audio").textContent = "Unmute Audio";
+        } else {
+          document.getElementById("audio").textContent = "Mute Audio";
+        }
+      }
+
+      let isVideo = true;
       function muteVideo() {
-        const videoEnabled = localStream.getVideoTracks()[0].enabled;
-        localStream.getVideoTracks()[0].enabled = !videoEnabled;
-        document.getElementById("video").textContent = videoEnabled
-          ? "Unmute Video"
-          : "Mute Video";
+        isVideo = !isVideo;
+        localstream.getVideoTracks()[0].enabled = isVideo;
+        if (!isVideo) {
+          document.getElementById("video").textContent = "Unmute Video";
+        } else {
+          document.getElementById("video").textContent = "Mute Video";
+        }
       }
 
       function leaveMeet() {
-        if (confirm("Are you sure you want to leave the meeting?")) {
+        let text = "Do you want to leave meeting?";
+        if (confirm(text) == true) {
           window.history.back();
         }
-      }
-
-      function sendMessage() {
-        const message = document.getElementById("message").value.trim();
-        if (message) {
-          socket.emit("send-chat", message, username);
-          appendChatMessage(`You: ${message}`);
-          document.getElementById("message").value = "";
-        }
-      }
-
-      function appendChatMessage(message) {
-        const msgList = document.getElementById("msg");
-        const msgItem = document.createElement("li");
-        msgItem.textContent = message;
-        msgList.appendChild(msgItem);
-        msgList.scrollTop = msgList.scrollHeight;
       }
     </script>
   </body>

@@ -10,6 +10,7 @@ const {
   getNewMeet,
   getYourRoom,
   joinUser,
+  getUserDetails,
 } = require("../controllers/user.controllers");
 const router = express.Router();
 
@@ -25,5 +26,6 @@ router.get("/user/:room", getYourRoom);
 router.get("/meetpage", getMeetpage);
 router.get("/newmeet", getNewMeet);
 router.post("/joinuser", joinUser);
+router.get("/user", getUserDetails);
 
 module.exports = router;

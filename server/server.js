@@ -46,6 +46,11 @@ io.on("connection", (socket) => {
 });
 
 app.use(router);
+// const meetingRouter = require("./routes/meeting.router");
+
+// // Existing setup...
+
+// app.use(meetingRouter); // Add the meeting routes
 
 server.listen(PORT, () => {
   console.log(`server is running at ${PORT}`);

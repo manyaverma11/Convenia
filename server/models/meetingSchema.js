@@ -6,7 +6,7 @@ const meetingSchema = new mongoose.Schema(
     title: { type: String, required: true },
     host: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
     participants: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
-    startTime: { type: Date, required: true, default: Date.now },
+    startTime: { type: Date, default: Date.now },
     endTime: { type: Date },
     transcript: { type: mongoose.Schema.Types.ObjectId, ref: "Transcript" },
     summary: { type: mongoose.Schema.Types.ObjectId, ref: "Summary" },
@@ -14,5 +14,5 @@ const meetingSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const Meeting = new mongoose.model("Meeting", userSchema);
+const Meeting = mongoose.model("Meeting", meetingSchema);
 module.exports = Meeting;

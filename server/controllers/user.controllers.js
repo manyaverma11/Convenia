@@ -2,6 +2,7 @@ const User = require("../models/userSchema");
 const jwt = require("jsonwebtoken");
 const { v4: uuidV4 } = require("uuid");
 const bcrypt = require("bcrypt");
+const { get } = require("mongoose");
 
 const getRegisterPage = (req, res) => {
   return res.render("signup");
@@ -17,8 +18,16 @@ const getMeetpage = (req, res) => {
   return res.render("meetpage");
 };
 
+const generateRoomId = (req, res) => {
+  let roomid = "";
+  for (let i = 0; i < 8; i++) {
+    roomid += String.fromCharCode(Math.floor(Math.random() * 26) + 97);
+  }
+  return roomid;
+};
+
 const getNewMeet = (req, res) => {
-  return res.redirect(`/user/${uuidV4()}`);
+  return res.redirect(`/user/${generateRoomId()}`);
 };
 
 const getYourRoom = (req, res) => {
@@ -108,6 +117,15 @@ const userLogin = async (req, res) => {
   }
 };
 
+const getUserDetails = async (req, res) => {
+  const user = req.user;
+  const userDetails = await User.findById(user._id);
+  if (!userDetails) {
+    return res.status(404).render("login", { error: "User not registered" });
+  }
+  return res.send({ user: userDetails }).status(200);
+};
+
 const logout = (req, res) => {
   res.clearCookie("user");
   res.clearCookie("jwttoken", { path: "/" });
@@ -124,4 +142,5 @@ module.exports = {
   getYourRoom,
   joinUser,
   logout,
+  getUserDetails,
 };

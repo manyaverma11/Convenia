@@ -7,17 +7,10 @@ const summarySchema = new mongoose.Schema(
       ref: "Meeting",
       required: true,
     },
-    url: {
-      type: String,
-      required: true,
-    },
-    createdAt: {
-      type: Date,
-      default: Date.now,
-    },
+    url: { type: String, required: true },
   },
   { timestamps: true }
 );
 
-const Summary = new mongoose.model("Summary", userSchema);
+const Summary = mongoose.model("Summary", summarySchema);
 module.exports = Summary;

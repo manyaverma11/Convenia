@@ -7,14 +7,10 @@ const transcriptSchema = new mongoose.Schema(
       ref: "Meeting",
       required: true,
     },
-    url: {
-      type: String,
-      required: true,
-    },
-    createdAt: { type: Date, default: Date.now },
+    url: { type: String, required: true },
   },
   { timestamps: true }
 );
 
-const Transcript = new mongoose.model("Transcript", userSchema);
+const Transcript = mongoose.model("Transcript", transcriptSchema);
 module.exports = Transcript;
