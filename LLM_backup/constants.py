@@ -1,2 +1,5 @@
-openai_key='your api key here'
+anthropic_key='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'
+# mistral_key='tRPUgGZEDUSeijHWwWdrLxzIoNiAQRcx'
+# friendli_key='flp_KNhYAIweXNFM1778ACdoPwTE2MhoASqAw6ZHIgD5ymL6f'
 hf_key='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'
+cohere_key='commFcn3YRw99xqzcOY0j7fH7exUXgD8Pr0pSY8Z'
