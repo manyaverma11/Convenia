@@ -13,3 +13,4 @@ myenv/
 *.log
 *.pkl
 .DS_Store
+constants.py
