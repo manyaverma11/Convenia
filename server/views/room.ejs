@@ -1,82 +1,286 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Convenia Meeting Room</title>
+    <script>
+      const ROOM_ID = "<%= roomId %>";
+      const username = "<%= username %>";
+    </script>
+    <script src="https://unpkg.com/peerjs@1.2.0/dist/peerjs.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="script.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+      crossorigin="anonymous"
+    />
+  </head>
+  <style>
+    body {
+      background-color: #181818;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="http://localhost:3030/public/styles.css">
-    <script src="https://unpkg.com/peerjs@1.3.1/dist/peerjs.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.3.1/peerjs.min.js.map"></script>
-    <script src="/socket.io/socket.io.js"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-    <script src="/socket.io/socket.io.js"></script>
+    .header {
+      background-color: #202020;
+      padding: 15px;
+      text-align: center;
+      color: #00d8ff;
+      font-size: 24px;
+      font-weight: bold;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    }
+
+    .main-content {
+      display: flex;
+      flex-grow: 1;
+      overflow: hidden;
+    }
+
+    #video-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      grid-gap: 20px;
+      flex: 2;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    video {
+      width: 100%;
+      border-radius: 8px;
+      background-color: #333;
+      object-fit: cover;
+      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+    }
+
+    .chat-section {
+      background-color: #202020;
+      padding: 20px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      border-left: 2px solid #444;
+    }
+
+    .chat-box {
+      flex-grow: 1;
+      background-color: #181818;
+      padding: 15px;
+      border-radius: 8px;
+      color: #ddd;
+      overflow-y: auto;
+      margin-bottom: 15px;
+      border: 1px solid #333;
+    }
+
+    .chat-box ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    .chat-input {
+      display: flex;
+      align-items: center;
+    }
+
+    .chat-input input {
+      flex: 1;
+      padding: 10px;
+      background-color: #333;
+      color: #fff;
+      border: 1px solid #444;
+      border-radius: 4px;
+    }
+
+    .chat-input button {
+      background-color: #00d8ff;
+      color: #000;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .chat-input button:hover {
+      background-color: #00b8e6;
+    }
+
+    .footer {
+      background-color: #202020;
+      padding: 10px;
+      text-align: center;
+      color: #ddd;
+      box-shadow: 0px -4px 6px rgba(0, 0, 0, 0.3);
+      display: flex;
+      justify-content: center;
+    }
+
+    .footer button {
+      margin: 5px;
+    }
+  </style>
+
+  <body>
+    <div class="header">
+      Convenia Meeting Room
+      <div>Room ID: <strong><%= roomId %></strong></div>
+    </div>
+
+    <div class="main-content">
+      <div id="video-grid"></div>
+
+      <div class="chat-section">
+        <h3>Chat Box</h3>
+        <div class="chat-box">
+          <ul id="msg"></ul>
+        </div>
+        <div class="chat-input">
+          <input type="text" name="message" id="message" />
+          <button onclick="sendMessage()">Send</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <button id="audio" onclick="muteAudiio()" class="btn btn-primary">
+        Mute Audio
+      </button>
+      <button id="video" onclick="muteVideo()" class="btn btn-primary">
+        Mute Video
+      </button>
+      <button onclick="leaveMeet()" class="btn btn-danger">
+        Leave Meeting
+      </button>
+      <form action="/logout" method="get" style="display: inline">
+        <button onclick="logout()" class="btn btn-danger">Logout</button>
+      </form>
+    </div>
 
     <script>
-        const myname = "<%= Myname %>"
-        const roomId = "<%= roomid %>"
+      const socket = io("/");
+      const videoGrid = document.getElementById("video-grid");
+      const myPeer = new Peer();
+      const myVideo = document.createElement("video");
+      myVideo.muted = true;
+      const peers = {};
+      let localstream;
+
+      navigator.mediaDevices
+        .getUserMedia({
+          video: true,
+          audio: true,
+        })
+        .then((stream) => {
+          localstream = stream;
+          addVideoStream(myVideo, stream);
+
+          myPeer.on("call", (call) => {
+            call.answer(stream);
+            const video = document.createElement("video");
+            call.on("stream", (userVideoStream) => {
+              addVideoStream(video, userVideoStream);
+            });
+          });
+
+          socket.on("user-connected", (userId) => {
+            connectToNewUser(userId, stream);
+          });
+
+          socket.on("show-to-room", (message, username) => {
+            items.push({ username: username, message: message });
+            let listItems = "";
+            for (let i = 0; i < items.length; i++) {
+              listItems +=
+                "<li>" +
+                "<span>" +
+                items[i].username +
+                "</span>" +
+                ": " +
+                items[i].message +
+                "</li>";
+            }
+            document.getElementById("msg").innerHTML = listItems;
+            document.getElementById("message").value = "";
+          });
+        });
+
+      socket.on("user-disconnected", (userId) => {
+        if (peers[userId]) {
+          peers[userId].close();
+        }
+      });
+
+      myPeer.on("open", (id) => {
+        socket.emit("join-room", ROOM_ID, id);
+      });
+
+      let items = [];
+      function sendMessage() {
+        var msgContent = document.getElementById("message").value;
+        socket.emit("send-chat", msgContent, username);
+      }
+
+      function connectToNewUser(userId, stream) {
+        const call = myPeer.call(userId, stream);
+        const video = document.createElement("video");
+        call.on("stream", (userVideoStream) => {
+          addVideoStream(video, userVideoStream);
+        });
+        call.on("close", () => {
+          video.remove();
+        });
+
+        peers[userId] = call;
+      }
+
+      function addVideoStream(video, stream) {
+        video.srcObject = stream;
+        video.addEventListener("loadedmetadata", () => {
+          video.play();
+        });
+        videoGrid.append(video);
+      }
+
+      let isAudio = true;
+      function muteAudiio() {
+        isAudio = !isAudio;
+        localstream.getAudioTracks()[0].enabled = isAudio;
+        if (!isAudio) {
+          document.getElementById("audio").textContent = "Unmute Audio";
+        } else {
+          document.getElementById("audio").textContent = "Mute Audio";
+        }
+      }
+
+      let isVideo = true;
+      function muteVideo() {
+        isVideo = !isVideo;
+        localstream.getVideoTracks()[0].enabled = isVideo;
+        if (!isVideo) {
+          document.getElementById("video").textContent = "Unmute Video";
+        } else {
+          document.getElementById("video").textContent = "Mute Video";
+        }
+      }
+
+      function leaveMeet() {
+        let text = "Do you want to leave meeting?";
+        if (confirm(text) == true) {
+          window.history.back();
+        }
+      }
     </script>
-</head>
-
-<body>
-    <div class="modal fade" id="getCodeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Invite People</h4>
-                </div>
-                <div class="modal-body">
-                    <p id="roomid"><strong><%= roomid %></p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-white" onclick="cancel()">Close</button>
-                    <button type="button" class="btn btn-primary" onclick="copy()">Copy</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="mainclone">
-        <div class="main_left">
-            <div class="main_videos">
-                <div id="video-grids">
-                </div>
-            </div>
-            <div class="main_controls">
-                <div class="main_controls_block">
-                    <div class="main_controls_button" id="mic" onclick="muteUnmute()">
-                        <i class="fas fa-microphone-slash"></i>
-                        <span>Mute</span>
-                    </div>
-
-                    <div class="main_controls_button" id="video" onclick="VideomuteUnmute()">
-                        <i class="fas fa-video-slash"></i>
-                        <span>Stop Video</span>
-                    </div>
-                </div>
-                <div class="main_controls_block">
-                    <div class="main_controls_button" onclick="invitebox()">
-                        <i class="fas fa-user-plus"></i>
-                        <span>Invite</span>
-                    </div>
-                    <div class="main_controls_button">
-                        <i class="fas fa-user-friends"></i>
-                        <span>Participants</span>
-                </div>
-                <div class="main_controls_block">
-                    <div class="main_controls_button leave_red">
-                        <span class="leave_meeting"><a href="/">Leave Meeting</a></span>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-    </div>
-    <script src="http://localhost:3030/public/main.js"></script>
-</body>
-
+  </body>
 </html>
