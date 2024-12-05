@@ -163,9 +163,25 @@
       <!-- Side Panel (Join Meeting) -->
       <div class="side-panel">
         <h6>Create a New Meeting</h6>
-        <a href="/newmeet">
-          <button class="btn btn-primary mb-3">Create New Room</button>
-        </a>
+        <form id="create-meeting-form">
+          <div class="form-group">
+            <input
+              type="text"
+              class="form-control"
+              id="meeting-title"
+              name="meetingTitle"
+              required
+              placeholder="Enter Meeting Title"
+            />
+          </div>
+          <button
+            type="button"
+            class="btn btn-primary mb-3"
+            id="create-meeting-button"
+          >
+            Create New Room
+          </button>
+        </form>
         <form action="/joinUser" method="post">
           <h6>Join a Meeting</h6>
           <div class="form-group">
@@ -185,17 +201,8 @@
       </div>
 
       <!-- Right Panel (Past Meetings) -->
-      <div class="past-meetings-container">
+      <div class="past-meetings-container" id="past-meetings-container">
         <h6>Past Meetings</h6>
-        <!-- Meeting Item Example -->
-        <div class="meeting-item">
-          <div>
-            <div><strong>Meeting Title</strong></div>
-            <div>Meeting Date & Time</div>
-          </div>
-
-          <a href="#">Download Transcript/Summary</a>
-        </div>
       </div>
     </div>
 
@@ -217,6 +224,72 @@
             <h2>Error loading user data</h2>
             <p>Please try again later.</p>
           `;
+        });
+
+      // Fetch meetings data and populate past meetings container
+      fetch("/meetings")
+        .then((response) => response.json())
+        .then((data) => {
+          const meetingsContainer = document.getElementById(
+            "past-meetings-container"
+          );
+          meetingsContainer.innerHTML = "<h6>Past Meetings</h6>";
+          data.meetings
+            .sort((a, b) => new Date(b.startTime) - new Date(a.startTime)) // Sort meetings by newest first
+            .forEach((meeting) => {
+              const meetingItem = document.createElement("div");
+              meetingItem.className = "meeting-item";
+              meetingItem.innerHTML = `
+                <div>
+                  <div><strong>${meeting.title}</strong></div>
+                  <div>${new Date(meeting.startTime).toLocaleString()}</div>
+                </div>
+                <a href="#">Download Transcript/Summary</a>
+              `;
+              meetingsContainer.appendChild(meetingItem);
+            });
+        })
+        .catch((error) => {
+          console.error("Error fetching meetings data:", error);
+          document.getElementById("past-meetings-container").innerHTML = `
+            <h6>Past Meetings</h6>
+            <p>Error loading meetings. Please try again later.</p>
+          `;
+        });
+
+      // Create Meeting button click event
+      document
+        .getElementById("create-meeting-button")
+        .addEventListener("click", function () {
+          const meetingTitle = document.getElementById("meeting-title").value;
+          if (meetingTitle) {
+            fetch("/newmeet", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ meetingTitle }),
+            })
+              .then((response) => {
+                if (!response.ok) {
+                  throw new Error("Network response was not ok");
+                }
+                return response.json();
+              })
+              .then((data) => {
+                if (data.success) {
+                  window.location.href = data.redirectUrl; // Redirect to the meeting room
+                } else {
+                  alert("Failed to create meeting. Please try again.");
+                }
+              })
+              .catch((error) => {
+                console.error("Error creating meeting:", error);
+                alert("An error occurred. Please try again later.");
+              });
+          } else {
+            alert("Please enter a meeting title.");
+          }
         });
     </script>
   </body>

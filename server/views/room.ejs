@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Convenia Meeting Room</title>
     <script>
-      const ROOM_ID = "<%= roomId %>";
+      const ROOM_ID = "<%= roomId %>"; // Room ID as session ID
       const username = "<%= username %>";
     </script>
     <script src="https://unpkg.com/peerjs@1.2.0/dist/peerjs.min.js"></script>
@@ -174,17 +174,39 @@
       const myPeer = new Peer();
       const myVideo = document.createElement("video");
       myVideo.muted = true;
-      const peers = {};
       let localstream;
+      let mediaRecorder;
+      let audioChunks = [];
 
       navigator.mediaDevices
-        .getUserMedia({
-          video: true,
-          audio: true,
-        })
+        .getUserMedia({ video: true, audio: true })
         .then((stream) => {
           localstream = stream;
           addVideoStream(myVideo, stream);
+
+          // Initialize MediaRecorder for audio recording
+          mediaRecorder = new MediaRecorder(stream);
+
+          // Collect audio data at regular intervals
+          mediaRecorder.ondataavailable = (event) => {
+            console.log("Audio data available", event.data); // Log audio data
+            audioChunks.push(event.data); // Accumulate audio data in chunks
+            console.log("audioChunks length:", audioChunks.length); // Log the length of chunks
+          };
+
+          mediaRecorder.onstop = async () => {
+            console.log("Recording stopped");
+            console.log("audioChunks length before:", audioChunks.length); // Log before creating audioBlob
+            const audioBlob = new Blob(audioChunks, { type: "audio/mp4" }); // Create the audio blob
+            console.log("audioBlob created:", audioBlob); // Check the audioBlob content
+            audioChunks = []; // Reset the chunks after creating the audioBlob
+
+            // Upload the audio file to S3
+            uploadFileToS3(audioBlob);
+          };
+
+          mediaRecorder.start(1000); // Start recording audio every second
+          console.log("MediaRecorder started");
 
           myPeer.on("call", (call) => {
             call.answer(stream);
@@ -276,10 +298,60 @@
       }
 
       function leaveMeet() {
-        let text = "Do you want to leave meeting?";
-        if (confirm(text) == true) {
-          window.history.back();
+        // Stop recording and leave the meeting
+        if (mediaRecorder && mediaRecorder.state !== "inactive") {
+          mediaRecorder.stop();
         }
+        uploadFileToS3(audioBlob);
+        alert("Leaving the meeting...");
+        window.history.back();
+      }
+
+      function uploadFileToS3(blob) {
+        // Step 1: Fetch the pre-signed URL from your server
+        fetch("/generate-presigned-url", { mode: "no-cors" }) //make this no cors
+          .then((response) => response.json())
+          .then((data) => {
+            const url = data.url; // The pre-signed URL to use for uploading
+            const key = data.key; // Key of the file in S3 after uploading
+
+            console.log("Obtained pre-signed URL:", url);
+
+            // Step 2: Upload the file using the pre-signed URL
+            return url;
+          })
+          .then((fileURL) => {
+            // Step 4: Send the S3 file URL to another server endpoint (e.g., for transcription)
+            sendAudioToAPI(fileURL);
+          })
+          .catch((error) => {
+            console.error("Error uploading file:", error);
+            alert("Error uploading file. Please try again.");
+          });
+      }
+
+      // Function to send the file URL to the transcription endpoint
+      function sendAudioToAPI(fileURL) {
+        const formdata = new FormData();
+        formdata.append("session_id", ROOM_ID);
+        formdata.append("audio_url", fileURL);
+        fetch(`http://localhost:4040/transcribe/${ROOM_ID}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: formdata,
+          mode: "no-cors",
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            console.log("Audio transcription initiated:", data);
+          })
+          .catch((error) => {
+            alert("Error sending transcription request.Leaving...");
+            console.error("Error sending transcription request:", error);
+            window.history.back();
+          });
       }
     </script>
   </body>

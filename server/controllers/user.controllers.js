@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const { v4: uuidV4 } = require("uuid");
 const bcrypt = require("bcrypt");
 const { get } = require("mongoose");
+const Meeting = require("../models/meetingSchema");
 
 const getRegisterPage = (req, res) => {
   return res.render("signup");
@@ -18,16 +19,8 @@ const getMeetpage = (req, res) => {
   return res.render("meetpage");
 };
 
-const generateRoomId = (req, res) => {
-  let roomid = "";
-  for (let i = 0; i < 8; i++) {
-    roomid += String.fromCharCode(Math.floor(Math.random() * 26) + 97);
-  }
-  return roomid;
-};
-
-const getNewMeet = (req, res) => {
-  return res.redirect(`/user/${generateRoomId()}`);
+const getNewMeet = async (req, res) => {
+  return res.redirect(`/user/${await generateRoomId()}`);
 };
 
 const getYourRoom = (req, res) => {

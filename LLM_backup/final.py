@@ -1,5 +1,6 @@
 from fastapi import FastAPI, File, UploadFile, BackgroundTasks, HTTPException
 from fastapi.responses import FileResponse
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import torch
 import os
@@ -16,6 +17,14 @@ import soundfile as sf
 import uvicorn
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["https://localhost:8000/"],  # Specify allowed origin
+    allow_credentials=True,
+    allow_methods=["*"],  # Allow all methods like GET, POST, etc.
+    allow_headers=["*"],  # Allow all headers
+)
 
 os.environ['HUGGINGFACEHUB_API_TOKEN'] = hf_key
 os.environ['COHERE_API_KEY'] = cohere_key
@@ -46,12 +55,18 @@ class TranscriptionResponse(BaseModel):
 
 def convert_video_to_audio(video_data):
     try:
+        # print("converting video to audio")
         with open("temp_video.mp4", "wb") as f:
             f.write(video_data)
+            # print("file written")
         video_clip = VideoFileClip("temp_video.mp4")
+        # print("video_clip")
         video_clip.audio.write_audiofile("temp_audio.wav")
+        # print("audio written")
         video_clip.close()
+        # print("video closed")
         audio_data, _ = librosa.load("temp_audio.wav", sr=16000, mono=True)
+        print("audio_data")
         return audio_data
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error in converting video to audio: {e}")
@@ -92,7 +107,6 @@ async def transcribe_video(session_id: str, video: UploadFile = File(...)):
     try:
         video_data = await video.read()
         audio_data = convert_video_to_audio(video_data)
-
         result = pipe(audio_data, generate_kwargs={'language': 'en'}, return_timestamps=True)
         transcription_text = result["text"]
         timestamps = result['chunks']
@@ -106,7 +120,6 @@ async def transcribe_video(session_id: str, video: UploadFile = File(...)):
         raise HTTPException(status_code=500, detail=f"Error in transcribing video: {e}")
     finally:
         clean_up_temp_files()
-
 @app.post("/end_session/{session_id}")
 async def end_meeting(session_id: str, background_task: BackgroundTasks):
     if session_id not in meeting_transcriptions:
